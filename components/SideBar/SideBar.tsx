@@ -7,23 +7,24 @@ import { db } from 'firebase-config'
 
 const SideBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [sectionName, setSectionName] = useState('')
+  const [channelName, setChannelName] = useState('')
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setSectionName(e.target.value)
+    setChannelName(e.target.value)
 
   const handleCloseModal = () => setIsModalOpen(false)
 
   const submitModal = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (sectionName.length > 0) {
+    if (channelName.length > 0) {
       await addDoc(collection(db, 'channels'), {
-        sectionName: sectionName,
+        channelName: channelName,
       })
     } else return
 
     handleCloseModal()
+    setChannelName('')
   }
 
   return (
@@ -37,7 +38,7 @@ const SideBar = () => {
             className='w-8 h-8 text-blue-200'
           />
         }
-        text='Create channel section'
+        text='Create new channel'
       />
       <SideBarIcon
         icon={<CogIcon className='w-9 h-9 text-blue-200' />}
@@ -47,9 +48,9 @@ const SideBar = () => {
       <ThemeSwitch />
 
       <Modal
-        header='Create channels section name'
+        header='Create new channel'
         isModalOpen={isModalOpen}
-        inputValue={sectionName}
+        inputValue={channelName}
         handleInputChange={handleInputChange}
         submitModal={submitModal}
         handleCloseModal={handleCloseModal}
