@@ -23,7 +23,6 @@ const SignUpForm = () => {
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState<any>()
   const [isError, setIsError] = useState()
-  const filePickRef = useRef<HTMLInputElement | null>(null)
   const router = useRouter()
   const {
     register,
@@ -187,7 +186,7 @@ const SignUpForm = () => {
         </label>
         <input
           style={{ display: 'none' }}
-          ref={filePickRef}
+          // ref={filePickRef}
           onChange={onUploadAvatar}
           type='file'
           accept='.jpg, .jpeg, .png'
