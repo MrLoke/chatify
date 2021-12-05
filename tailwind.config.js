@@ -5,6 +5,12 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      keyframes: {
+        'drawer-left': {
+          '0%, 100%': { left: '-500px' },
+          '100%': { left: '0' },
+        },
+      },
       colors: {
         gray: {
           900: '#202225',
