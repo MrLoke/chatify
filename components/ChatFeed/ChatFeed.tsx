@@ -6,13 +6,14 @@ import ChatMessage from 'components/ChatMessage/ChatMessage'
 import { ArrowCircleDownIcon } from '@heroicons/react/solid'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, query } from '@firebase/firestore'
+import useScrollToBottom from 'hooks/useScrollToBottom'
 import { db } from 'firebase-config'
 
 const ChatFeed = ({ messages }: { messages: string }) => {
   const [visible, setVisible] = useState(false)
   const router = useRouter()
-  const messagesEndRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  const { contentEndRef, scrollToBottom } = useScrollToBottom()
   const [messagesSnapshot] = useCollection(
     query(
       //@ts-ignore
@@ -26,16 +27,11 @@ const ChatFeed = ({ messages }: { messages: string }) => {
       //@ts-ignore
       if (contentRef.current?.scrollTop <= 600) {
         setVisible(true)
-        //@ts-ignore
       } else {
         setVisible(false)
       }
     })
   }, [])
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   useEffect(() => {
     scrollToBottom()
@@ -63,7 +59,7 @@ const ChatFeed = ({ messages }: { messages: string }) => {
             <ArrowCircleDownIcon className='w-8 h-8 text-blue-200' />
           </button>
         ) : null}
-        <div ref={messagesEndRef} />
+        <div ref={contentEndRef} />
       </div>
       <ChatTextarea />
     </div>
