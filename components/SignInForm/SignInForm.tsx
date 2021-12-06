@@ -2,9 +2,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from 'firebase-config'
+import { auth, db } from 'firebase-config'
 import { useForm } from 'react-hook-form'
-import { LockClosedIcon, MailIcon } from '@heroicons/react/outline'
+import {
+  LockClosedIcon,
+  MailIcon,
+  EyeIcon,
+  EyeOffIcon,
+} from '@heroicons/react/outline'
+import { doc, updateDoc } from '@firebase/firestore'
 
 type FormData = {
   email: string
@@ -13,14 +19,27 @@ type FormData = {
 
 const SignInForm = () => {
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [isError, setIsError] = useState()
   const router = useRouter()
-  const { register, handleSubmit } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+
+  const handleShowPassword = () => setShowPassword(!showPassword)
 
   const onSubmit = async ({ email, password }: FormData) => {
     setLoading(true)
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then(async ({ user }) => {
+        const docRef = doc(db, 'users', user.uid)
+
+        await updateDoc(docRef, {
+          status: user.metadata.lastSignInTime,
+        })
+
         router.push('/')
       })
       .catch((error) => {
@@ -51,24 +70,30 @@ const SignInForm = () => {
             className='input'
           />
         </div>
+        {errors.email && (
+          <span className='mt-2 text-center w-full text-sm text-red-500'>
+            {errors.email.message}
+          </span>
+        )}
 
         <div className='input-container'>
           <span className='input-icon'>
             <LockClosedIcon className='w-5 h-5 text-gray-900' />
           </span>
           <input
-            {...register('password', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'invalid email address',
-              },
-            })}
-            type='password'
+            {...register('password')}
+            type={showPassword ? 'text' : 'password'}
             placeholder='Password'
             name='password'
             className='input'
           />
+          <span className='show-password-icon' onClick={handleShowPassword}>
+            {showPassword ? (
+              <EyeOffIcon className='w-5 h-5 text-gray-900' />
+            ) : (
+              <EyeIcon className='w-5 h-5 text-gray-900' />
+            )}
+          </span>
         </div>
 
         <div className='ml-2'>
@@ -88,9 +113,12 @@ const SignInForm = () => {
           </div>
         ) : null}
 
-        <button type='submit' className='submit-btn' disabled={loading}>
+        <button
+          type='submit'
+          className='submit-btn flex justify-center'
+          disabled={loading}>
           {loading ? (
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-blue-200'></div>
+            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-gray-200'></div>
           ) : (
             <p>Sign In</p>
           )}

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { addDoc, collection } from 'firebase/firestore'
+import { setDoc, doc } from 'firebase/firestore'
 import { auth, db, storage } from 'firebase-config'
 import { useForm } from 'react-hook-form'
 import {
@@ -11,6 +11,8 @@ import {
   UserIcon,
   MailIcon,
   LockClosedIcon,
+  EyeIcon,
+  EyeOffIcon,
 } from '@heroicons/react/outline'
 
 type FormData = {
@@ -21,6 +23,7 @@ type FormData = {
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [avatar, setAvatar] = useState<any>()
   const [isError, setIsError] = useState()
   const router = useRouter()
@@ -33,6 +36,8 @@ const SignUpForm = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
+  const handleShowPassword = () => setShowPassword(!showPassword)
+
   const onUploadAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       setAvatar(e.target.files[0])
@@ -42,27 +47,26 @@ const SignUpForm = () => {
   const onSubmit = async ({ displayName, email, password }: FormData) => {
     setLoading(true)
     createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userAuth) => {
-        const imageRef = ref(
-          storage,
-          `users/${userAuth.user.uid}/${avatar.name}`
-        )
+      .then(async ({ user }) => {
+        const imageRef = ref(storage, `users/${user.uid}/${avatar.name}`)
 
         await uploadBytes(imageRef, avatar).then(async (snapshot) => {
           const downloadURL = await getDownloadURL(imageRef)
 
-          await updateProfile(userAuth.user, {
+          await updateProfile(user, {
             displayName,
             photoURL: downloadURL,
           })
 
           // Add new user to firestore db
-          await addDoc(collection(db, 'users'), {
+          const docRef = doc(db, 'users', user.uid)
+          await setDoc(docRef, {
             email,
             displayName,
             avatar: downloadURL,
-            status: userAuth.user.metadata.lastSignInTime,
-            uid: userAuth.user.uid,
+            status: user.metadata.lastSignInTime,
+            created: user.metadata.creationTime,
+            uid: user.uid,
           })
         })
 
@@ -145,11 +149,18 @@ const SignUpForm = () => {
                 message: 'Password is to short 6 characters minimum',
               },
             })}
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             placeholder='Password'
             name='password'
             className='input'
           />
+          <span className='show-password-icon' onClick={handleShowPassword}>
+            {showPassword ? (
+              <EyeOffIcon className='w-5 h-5 text-gray-900' />
+            ) : (
+              <EyeIcon className='w-5 h-5 text-gray-900' />
+            )}
+          </span>
           {errors.password && (
             <span className='mt-2 text-center w-full text-sm text-red-500'>
               {errors.password.message}
@@ -171,6 +182,13 @@ const SignUpForm = () => {
             name='confirmPassword'
             className='input'
           />
+          <span className='show-password-icon' onClick={handleShowPassword}>
+            {showPassword ? (
+              <EyeOffIcon className='w-5 h-5 text-gray-900' />
+            ) : (
+              <EyeIcon className='w-5 h-5 text-gray-900' />
+            )}
+          </span>
           {errors.confirmPassword && (
             <span className='mt-2 text-center w-full text-sm text-red-500'>
               {errors.confirmPassword.message}
@@ -186,7 +204,6 @@ const SignUpForm = () => {
         </label>
         <input
           style={{ display: 'none' }}
-          // ref={filePickRef}
           onChange={onUploadAvatar}
           type='file'
           accept='.jpg, .jpeg, .png'
@@ -208,7 +225,7 @@ const SignUpForm = () => {
           className='submit-btn flex justify-center'
           disabled={loading}>
           {loading ? (
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-blue-200'></div>
+            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-gray-200'></div>
           ) : (
             <p>Sign Up</p>
           )}
