@@ -1,13 +1,17 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
+import { useRouter } from 'next/router'
 import Modal from 'components/Modal/Modal'
 import ThemeSwitch from 'components/ThemeSwitch/ThemeSwitch'
 import { FireIcon, CogIcon, PlusIcon } from '@heroicons/react/solid'
+import { LogoutIcon } from '@heroicons/react/outline'
 import { addDoc, collection } from '@firebase/firestore'
-import { db } from 'firebase-config'
+import { auth, db } from 'firebase-config'
+import { signOut } from '@firebase/auth'
 
 const SideBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [channelName, setChannelName] = useState('')
+  const router = useRouter()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setChannelName(e.target.value)
@@ -25,6 +29,12 @@ const SideBar = () => {
 
     handleCloseModal()
     setChannelName('')
+  }
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => router.push('/signin'))
+      .catch((error) => alert(error))
   }
 
   return (
@@ -46,6 +56,15 @@ const SideBar = () => {
       />
       <hr className='sidebar-hr' />
       <ThemeSwitch />
+      <SideBarIcon
+        icon={
+          <LogoutIcon
+            onClick={handleSignOut}
+            className='w-7 h-7 text-blue-200'
+          />
+        }
+        text='Logout'
+      />
 
       <Modal
         header='Create new channel'
