@@ -4,14 +4,14 @@ import SignInForm from 'components/SignInForm/SignInForm'
 
 const Signin: NextPage = () => {
   return (
-    <div>
+    <>
       <Head>
         <title>Chatify | Sign In</title>
       </Head>
-      <div className='flex h-screen items-center justify-center'>
+      <div className='flex min-h-screen items-center justify-center'>
         <SignInForm />
       </div>
-    </div>
+    </>
   )
 }
 
