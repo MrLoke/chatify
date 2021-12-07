@@ -45,8 +45,10 @@ const Channel: NextPage = ({
       </Head>
 
       <div className='flex h-screen'>
-        <SideBar />
-        <ChannelBar />
+        <div className='hidden md:flex'>
+          <SideBar />
+          <ChannelBar />
+        </div>
         <ChatFeed messages={messages} />
       </div>
     </>
