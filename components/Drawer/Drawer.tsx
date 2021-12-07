@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 import Portal from '@reach/portal'
 import { MenuIcon } from '@heroicons/react/outline'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
@@ -39,7 +39,7 @@ const style = {
 }
 
 interface DrawerTypes {
-  children: any
+  children: ReactNode
   isOpen: boolean
   toggleDrawer: () => void
 }
