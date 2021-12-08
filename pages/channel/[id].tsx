@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import ChatFeed from 'components/ChatFeed/ChatFeed'
 import SideBar from 'components/SideBar/SideBar'
-import { collection, onSnapshot, orderBy, query } from '@firebase/firestore'
+import { collection, onSnapshot, query } from '@firebase/firestore'
 import { auth, db } from 'firebase-config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import SignInForm from 'components/SignInForm/SignInForm'
@@ -33,7 +33,11 @@ const Channel: NextPage = ({
   }
 
   if (error) {
-    return <div className='flex'>{error}</div>
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <h3 className='text-red-500'>{error}</h3>
+      </div>
+    )
   }
 
   return (
@@ -61,8 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   onSnapshot(
     query(
       //@ts-ignore
-      collection(db, 'channels', context?.params?.id, 'messages'),
-      orderBy('timestamp', 'desc')
+      collection(db, 'channels', context?.params?.id, 'messages')
     ),
     (snapshot) => {
       snapshot.docs.map((doc) => {
