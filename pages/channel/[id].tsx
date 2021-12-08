@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import ChatFeed from 'components/ChatFeed/ChatFeed'
 import SideBar from 'components/SideBar/SideBar'
-import { collection, getDocs } from '@firebase/firestore'
+import { collection, onSnapshot, orderBy, query } from '@firebase/firestore'
 import { auth, db } from 'firebase-config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import SignInForm from 'components/SignInForm/SignInForm'
@@ -58,17 +58,21 @@ const Channel: NextPage = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const messages: { id: string }[] = []
 
-  const querySnapshot = await getDocs(
-    //@ts-ignore
-    collection(db, 'channels', context?.params?.id, 'messages')
+  onSnapshot(
+    query(
+      //@ts-ignore
+      collection(db, 'channels', context?.params?.id, 'messages'),
+      orderBy('timestamp', 'desc')
+    ),
+    (snapshot) => {
+      snapshot.docs.map((doc) => {
+        messages.push({
+          ...doc.data(),
+          id: doc.id,
+        })
+      })
+    }
   )
-
-  querySnapshot.forEach((doc) => {
-    messages.push({
-      ...doc.data(),
-      id: doc.id,
-    })
-  })
 
   return {
     props: { messages: JSON.stringify(messages) },
