@@ -1,12 +1,8 @@
 import { useRouter } from 'next/router'
 import { HashtagIcon } from '@heroicons/react/solid'
+import { ChannelPropsTypes } from 'types/types'
 
-interface ChannelProps {
-  id: string
-  channelName: string
-}
-
-const Channel = ({ id, channelName }: ChannelProps) => {
+const Channel = ({ id, channelName }: ChannelPropsTypes) => {
   const router = useRouter()
 
   return (
@@ -19,7 +15,9 @@ const Channel = ({ id, channelName }: ChannelProps) => {
           query: { name: `${channelName}` },
         })
       }>
-      <HashtagIcon className='text-gray-500 dark:text-gray-600 w-7 h-7 mr-2' />
+      <div className='flex w-7 h-7 mr-2'>
+        <HashtagIcon className='text-gray-500 dark:text-gray-600' />
+      </div>
       <h5 className='dropdown-selection-text'>{channelName}</h5>
     </div>
   )
