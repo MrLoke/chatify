@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { setDoc, doc } from 'firebase/firestore'
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { auth, db, storage } from 'firebase-config'
 import { useForm } from 'react-hook-form'
+import { SignUpFormTypes } from 'types/types'
 import {
   UploadIcon,
   UserIcon,
@@ -14,12 +15,6 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from '@heroicons/react/outline'
-
-type FormData = {
-  displayName: string
-  email: string
-  password: string
-}
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState(false)
@@ -44,7 +39,11 @@ const SignUpForm = () => {
     }
   }, [])
 
-  const onSubmit = async ({ displayName, email, password }: FormData) => {
+  const onSubmit = async ({
+    displayName,
+    email,
+    password,
+  }: SignUpFormTypes) => {
     setLoading(true)
     createUserWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
@@ -68,6 +67,7 @@ const SignUpForm = () => {
               status: user.metadata.lastSignInTime,
               created: user.metadata.creationTime,
               uid: user.uid,
+              timestamp: serverTimestamp(),
             })
           })
         } else {
@@ -86,6 +86,7 @@ const SignUpForm = () => {
               status: user.metadata.lastSignInTime,
               created: user.metadata.creationTime,
               uid: user.uid,
+              timestamp: serverTimestamp(),
             })
           })
         }
@@ -96,7 +97,6 @@ const SignUpForm = () => {
       .catch((error) => {
         setLoading(false)
         setIsError(error.message)
-        console.log(error)
       })
   }
 
