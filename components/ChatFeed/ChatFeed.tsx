@@ -1,19 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import TopNavigation from 'components/TopNavigation/TopNavigation'
 import ChatTextarea from 'components/ChatTextarea/ChatTextarea'
 import ChatMessage from 'components/ChatMessage/ChatMessage'
-import { ArrowCircleDownIcon } from '@heroicons/react/solid'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, query } from '@firebase/firestore'
-import useScrollToBottom from 'hooks/useScrollToBottom'
 import { db } from 'firebase-config'
 
 const ChatFeed = ({ messages }: { messages: string }) => {
-  const [visible, setVisible] = useState(false)
   const router = useRouter()
-  const contentRef = useRef<HTMLDivElement>(null)
-  const { contentEndRef, scrollToBottom } = useScrollToBottom()
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   const [messagesSnapshot] = useCollection(
     query(
       //@ts-ignore
@@ -22,20 +18,11 @@ const ChatFeed = ({ messages }: { messages: string }) => {
     )
   )
 
-  useEffect(() => {
-    contentRef.current?.addEventListener('scroll', () => {
-      //@ts-ignore
-      if (contentRef.current?.scrollTop <= 600) {
-        setVisible(true)
-      } else {
-        setVisible(false)
-      }
-    })
-  }, [])
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' })
+  }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [])
+  useEffect(scrollToBottom, [messagesSnapshot, router.query.name])
 
   const showMessages = () => {
     if (messagesSnapshot) {
@@ -52,14 +39,9 @@ const ChatFeed = ({ messages }: { messages: string }) => {
   return (
     <div className='content-container'>
       <TopNavigation />
-      <div className='content-list' ref={contentRef}>
+      <div className='content-list'>
         {showMessages()}
-        {visible ? (
-          <button className='fixed right-10 bottom-24' onClick={scrollToBottom}>
-            <ArrowCircleDownIcon className='w-8 h-8 text-blue-200' />
-          </button>
-        ) : null}
-        <div ref={contentEndRef} />
+        <div ref={messagesEndRef} />
       </div>
       <ChatTextarea />
     </div>
