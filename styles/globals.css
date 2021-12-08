@@ -92,7 +92,7 @@
   }
 
   .post {
-    @apply w-full flex flex-row items-center my-2 py-1 px-4 md:px-8;
+    @apply w-full flex flex-row items-center my-2 py-1 px-4 md:px-8 hover:bg-gray-800 transition-all;
   }
 
   .post-selected {
