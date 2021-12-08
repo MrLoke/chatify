@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -13,16 +14,14 @@ import {
   QueryDocumentSnapshot,
 } from '@firebase/firestore'
 import { db } from 'firebase-config'
-
-interface DropdownProps {
-  id: string
-  channelName: string
-}
+import { HashtagIcon } from '@heroicons/react/outline'
 
 const ChannelBar = () => {
+  const [expanded, setExpanded] = useState(true)
   const [channelsList, setChannelsList] = useState<
     QueryDocumentSnapshot<DocumentData>[]
   >([])
+  const router = useRouter()
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -35,55 +34,57 @@ const ChannelBar = () => {
   }, [])
 
   return (
-    <div className='channel-bar shadow-lg'>
+    <div className='channel-bar'>
       <div className='channel-block'>
         <h5 className='channel-block-text'>Channels</h5>
       </div>
 
-      <div className='channel-container'>
-        {channelsList.map((channel) => (
-          <Dropdown
-            key={channel.id}
-            channelName={channel.data().channelName}
-            id={channel.id}
-          />
-        ))}
+      <div className='dropdown'>
+        <div
+          className='dropdown-selection mb-2'
+          onClick={() => router.push('/')}>
+          <HashtagIcon className='text-gray-500 dark:text-gray-600 w-7 h-7 mr-2' />
+          <h5 className='dropdown-selection-text'>Home</h5>
+        </div>
+        <div className='dropdown-header'>
+          <div onClick={() => setExpanded(!expanded)}>
+            <ChevronIcon expanded={expanded} />
+          </div>
+          <h5
+            onClick={() => setExpanded(!expanded)}
+            className={
+              expanded
+                ? 'dropdown-header-text-selected'
+                : 'dropdown-header-text'
+            }>
+            Topics
+          </h5>
+          <div className='text-accent text-opacity-80 my-auto ml-auto'>
+            <PlusIcon className='text-accent text-opacity-80 my-auto ml-auto w-7 h-7 text-blue-200' />
+          </div>
+        </div>
+        <div className='channel-container'>
+          {expanded &&
+            channelsList.map((channel) => (
+              <Channel
+                key={channel.id}
+                channelName={channel.data().channelName}
+                id={channel.id}
+              />
+            ))}
+        </div>
       </div>
     </div>
   )
 }
 
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => {
-  const chevClass = 'text-accent text-opacity-80 my-auto mr-1 w-7 h-7'
+  const chevClass =
+    'text-accent text-opacity-80 my-auto mr-1 w-7 h-7 text-blue-200'
   return expanded ? (
     <ChevronDownIcon className={chevClass} />
   ) : (
     <ChevronRightIcon className={chevClass} />
-  )
-}
-
-const Dropdown = ({ id, channelName }: DropdownProps) => {
-  const [expanded, setExpanded] = useState(true)
-
-  return (
-    <div className='dropdown'>
-      <div className='dropdown-header'>
-        <div onClick={() => setExpanded(!expanded)}>
-          <ChevronIcon expanded={expanded} />
-        </div>
-        <h5
-          onClick={() => setExpanded(!expanded)}
-          className={
-            expanded ? 'dropdown-header-text-selected' : 'dropdown-header-text'
-          }>
-          Topics
-        </h5>
-        <div className='text-accent text-opacity-80 my-auto ml-auto'>
-          <PlusIcon className='text-accent text-opacity-80 my-auto ml-auto w-7 h-7' />
-        </div>
-      </div>
-      {expanded && <Channel id={id} channelName={channelName} />}
-    </div>
   )
 }
 
