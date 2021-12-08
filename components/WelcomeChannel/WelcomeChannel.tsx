@@ -1,11 +1,13 @@
-import { collection } from '@firebase/firestore'
+import { collection, orderBy, query } from '@firebase/firestore'
 import TopNavigation from 'components/TopNavigation/TopNavigation'
 import WelcomeUser from 'components/WelcomeUser/WelcomeUser'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from 'firebase-config'
 
 const WelcomeChannel = ({ users }: { users: string }) => {
-  const [usersSnapshot] = useCollection(collection(db, 'users'))
+  const [usersSnapshot] = useCollection(
+    query(collection(db, 'users'), orderBy('timestamp', 'asc'))
+  )
 
   const showUsers = () => {
     if (usersSnapshot) {
