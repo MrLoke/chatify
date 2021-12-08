@@ -1,15 +1,7 @@
-import { ChangeEvent, FormEvent, ReactNode, useRef } from 'react'
+import { ReactNode, useRef } from 'react'
 import Portal from '@reach/portal'
 import useOnClickOutside from 'hooks/useOnClickOutside'
-
-interface ModalProps {
-  header: string
-  isModalOpen: boolean
-  inputValue: string
-  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
-  submitModal: (e: FormEvent<HTMLFormElement>) => Promise<void>
-  handleCloseModal: () => void
-}
+import { ModalPropsTypes } from 'types/types'
 
 const Modal = ({
   header,
@@ -18,14 +10,14 @@ const Modal = ({
   handleInputChange,
   submitModal,
   handleCloseModal,
-}: ModalProps) => {
+}: ModalPropsTypes) => {
   return (
     <ModalElement isOpen={isModalOpen} handleCloseModal={handleCloseModal}>
       <div className='flex items-start justify-between p-5'>
         <h3 className='text-gray-800 text-2xl font-semibold'>{header}</h3>
       </div>
-      <form onSubmit={submitModal}>
-        <div className='relative p-3 flex-auto'>
+      <form onSubmit={submitModal} className='p-3'>
+        <div className='relative flex-auto'>
           <input
             value={inputValue}
             onChange={handleInputChange}
@@ -34,7 +26,6 @@ const Modal = ({
             className='p-2 w-full border-2 outline-none border-blue-500 rounded bg-gray-100 text-gray-800 placeholder-gray-500'
           />
         </div>
-        {/*footer*/}
         <div className='flex items-center justify-center py-6 px-3'>
           <button
             className='w-9/12 bg-blue-200 text-gray-100 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
@@ -54,10 +45,10 @@ const Modal = ({
 }
 
 const style = {
-  content: `relative flex flex-col mt-64 bg-white pointer-events-auto`,
+  content: `relative flex flex-col mt-64 rounded bg-white pointer-events-auto`,
   container: `fixed top-0 overflow-y-auto left-0 z-40 w-full h-full m-0`,
   overlay: `fixed top-0 left-0 z-30 w-screen h-screen bg-black opacity-50`,
-  orientation: `mx-8 md:m-auto md:w-6/12 lg:w-4/12 focus:outline-none`,
+  orientation: `mx-8 md:m-auto md:w-6/12 lg:w-4/12 xl:w-3/12 focus:outline-none`,
 }
 
 interface ModalTypes {
