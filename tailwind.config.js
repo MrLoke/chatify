@@ -40,6 +40,8 @@ module.exports = {
   variants: {
     extend: {
       borderStyle: ['hover', 'focus'],
+      padding: ['first', 'last'],
+      margin: ['first', 'last'],
     },
   },
   plugins: [],
