@@ -16,13 +16,13 @@ const WelcomeUser = ({ data }: { data: DocumentData }) => {
             className='rounded-full'
           />
         </div>
-        <p className='text-blue-200'>@{data.displayName}</p>
+        <p className='text-blue-200 cursor-pointer'>@{data.displayName}</p>
         <p className='ml-2'>in Chatify!</p>
       </div>
       &nbsp;&nbsp;
       <span className='text-gray-500 dark:text-gray-400 text-sm'>
-        Last sign in{' '}
-        {formatDistance(new Date(data.status), new Date(), {
+        Created{' '}
+        {formatDistance(new Date(data.created), new Date(), {
           addSuffix: true,
         })}
       </span>
