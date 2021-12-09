@@ -10,10 +10,10 @@ import { db } from 'firebase-config'
 const ChatFeed = ({ messages }: { messages: string }) => {
   const router = useRouter()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const channelId: string = router.query.id as string
   const [messagesSnapshot] = useCollection(
     query(
-      //@ts-ignore
-      collection(db, 'channels', router.query.id, 'messages'),
+      collection(db, 'channels', channelId, 'messages'),
       orderBy('timestamp', 'asc')
     )
   )
