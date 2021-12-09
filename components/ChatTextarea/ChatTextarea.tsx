@@ -20,6 +20,7 @@ const ChatTextarea = () => {
   const [selectedFile, setSelectedFile] = useState<any>(null)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const channelId: string = router.query.id as string
   useOnClickOutside(emojiPickerRef, () => setShowPicker(false))
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) =>
@@ -29,15 +30,11 @@ const ChatTextarea = () => {
     e.preventDefault()
 
     if (selectedFile !== null) {
-      const fileRef = ref(
-        storage,
-        `messages/${router.query.id}/${selectedFile.name}`
-      )
+      const fileRef = ref(storage, `messages/${channelId}/${selectedFile.name}`)
 
       await uploadBytes(fileRef, selectedFile).then(async (snapshot) => {
         const downloadURL = await getDownloadURL(fileRef)
-        //@ts-ignore
-        await addDoc(collection(db, 'channels', router.query.id, 'messages'), {
+        await addDoc(collection(db, 'channels', channelId, 'messages'), {
           userName: user?.displayName,
           profileImage: user?.photoURL,
           message: message,
@@ -50,16 +47,12 @@ const ChatTextarea = () => {
     }
 
     if (message.length > 0 && selectedFile === null) {
-      await addDoc(
-        //@ts-ignore
-        collection(db, 'channels', router.query.id, 'messages'),
-        {
-          userName: user?.displayName,
-          profileImage: user?.photoURL,
-          message: message,
-          timestamp: serverTimestamp(),
-        }
-      )
+      await addDoc(collection(db, 'channels', channelId, 'messages'), {
+        userName: user?.displayName,
+        profileImage: user?.photoURL,
+        message: message,
+        timestamp: serverTimestamp(),
+      })
       setMessage('')
     } else return
   }
@@ -104,9 +97,9 @@ const ChatTextarea = () => {
         </button>
 
         <div
-          className='px-2 cursor-pointer'
+          className='px-1 cursor-pointer'
           onClick={() => setShowPicker(!showPicker)}>
-          <EmojiHappyIcon className='w-7 h-7 text-yellow-300' />
+          <EmojiHappyIcon className='w-7 h-7 rounded-full bg-gray-600 text-yellow-300' />
         </div>
         {showPicker && (
           <div ref={emojiPickerRef}>
