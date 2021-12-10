@@ -123,6 +123,7 @@ const SignUpForm = () => {
               },
             })}
             placeholder='User name'
+            aria-label='username-input'
             name='displayName'
             type='text'
             className='input'
@@ -143,10 +144,11 @@ const SignUpForm = () => {
               required: 'Email is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'invalid email address',
+                message: 'Invalid e-mail address',
               },
             })}
             placeholder='E-mail'
+            aria-label='email-input'
             name='email'
             type='text'
             className='input'
@@ -167,10 +169,11 @@ const SignUpForm = () => {
               required: 'Password is required',
               minLength: {
                 value: 6,
-                message: 'Password is to short 6 characters minimum',
+                message: 'Password is too short 6 characters minimum',
               },
             })}
             type={showPassword ? 'text' : 'password'}
+            aria-label='password-input'
             placeholder='Password'
             name='password'
             className='input'
@@ -227,7 +230,7 @@ const SignUpForm = () => {
           style={{ display: 'none' }}
           onChange={onUploadAvatar}
           type='file'
-          accept='.jpg, .jpeg, .png'
+          accept='.jpg, .jpeg, .png .webp .avif'
           id='avatar'
         />
 
@@ -243,6 +246,7 @@ const SignUpForm = () => {
 
         <button
           type='submit'
+          aria-label='sign-up-button'
           className='submit-btn flex justify-center'
           disabled={loading}>
           {loading ? (
