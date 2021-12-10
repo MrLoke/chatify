@@ -57,10 +57,11 @@ const SignInForm = () => {
               required: 'Email is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'invalid email address',
+                message: 'Invalid e-mail address',
               },
             })}
             placeholder='E-mail'
+            aria-label='email-input'
             name='email'
             type='text'
             className='input'
@@ -77,8 +78,11 @@ const SignInForm = () => {
             <LockClosedIcon className='w-5 h-5 text-gray-900' />
           </span>
           <input
-            {...register('password')}
+            {...register('password', {
+              required: 'Password is required',
+            })}
             type={showPassword ? 'text' : 'password'}
+            aria-label='password-input'
             placeholder='Password'
             name='password'
             className='input'
@@ -91,6 +95,11 @@ const SignInForm = () => {
             )}
           </span>
         </div>
+        {errors.password && (
+          <span className='mt-2 text-center w-full text-sm text-red-500'>
+            {errors.password.message}
+          </span>
+        )}
 
         <div className='ml-2'>
           <label className='inline-flex items-center cursor-pointer'>
@@ -111,6 +120,7 @@ const SignInForm = () => {
 
         <button
           type='submit'
+          aria-label='sign-in-button'
           className='submit-btn flex justify-center'
           disabled={loading}>
           {loading ? (
