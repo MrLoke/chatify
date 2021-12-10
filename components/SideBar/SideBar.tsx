@@ -51,7 +51,12 @@ const SideBar = () => {
         text='Create new channel'
       />
       <SideBarIcon
-        icon={<CogIcon className='w-9 h-9 text-blue-200' />}
+        icon={
+          <CogIcon
+            onClick={() => router.push('/settings')}
+            className='w-8 h-8 text-blue-200'
+          />
+        }
         text='Settings'
       />
       <hr className='sidebar-hr' />
