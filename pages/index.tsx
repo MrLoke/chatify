@@ -31,7 +31,11 @@ const Home: NextPage = ({
   }
 
   if (error) {
-    return <div className='flex'>{error}</div>
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <h3 className='text-red-500'>{error}</h3>
+      </div>
+    )
   }
 
   return (
