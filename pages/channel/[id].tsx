@@ -61,12 +61,10 @@ const Channel: NextPage = ({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const messages: { id: string }[] = []
+  const channelId: string = context?.params?.id as string
 
   onSnapshot(
-    query(
-      //@ts-ignore
-      collection(db, 'channels', context?.params?.id, 'messages')
-    ),
+    query(collection(db, 'channels', channelId, 'messages')),
     (snapshot) => {
       snapshot.docs.map((doc) => {
         messages.push({
