@@ -4,19 +4,21 @@ import { DocumentData } from '@firebase/firestore'
 import formatDistance from 'date-fns/formatDistance'
 
 const ChatMessage = ({ data }: { data: DocumentData }) => {
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
+  const [width, setWidth] = useState(300)
+  const [height, setHeight] = useState(300)
 
   return (
     <div className='post'>
       <div className='avatar-wrapper'>
-        <Image
-          src={data.profileImage}
-          alt={`${data.userName} avatar`}
-          layout='fill'
-          objectFit='cover'
-          className='rounded-full'
-        />
+        <div className='w-12 h-12 relative'>
+          <Image
+            src={data.profileImage}
+            alt={`${data.userName} avatar`}
+            layout='fill'
+            objectFit='cover'
+            className='rounded-full'
+          />
+        </div>
       </div>
 
       <div className='post-content relative'>
@@ -36,7 +38,7 @@ const ChatMessage = ({ data }: { data: DocumentData }) => {
         </p>
         <p className='post-text'>{data.message}</p>
         {data.image ? (
-          <div className='relatives'>
+          <div className='relative mt-2'>
             <Image
               src={data.image}
               alt={`Image post by ${data.userName}`}
