@@ -2,7 +2,8 @@ import { ChangeEvent, FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import Modal from 'components/Modal/Modal'
 import ThemeSwitch from 'components/ThemeSwitch/ThemeSwitch'
-import { FireIcon, CogIcon, PlusIcon } from '@heroicons/react/solid'
+import { CogIcon, PlusIcon } from '@heroicons/react/solid'
+import { ChatAlt2Icon } from '@heroicons/react/outline'
 import { LogoutIcon } from '@heroicons/react/outline'
 import { addDoc, collection } from '@firebase/firestore'
 import { auth, db } from 'firebase-config'
@@ -39,7 +40,15 @@ const SideBar = () => {
 
   return (
     <div className='fixed top-0 left-0 h-screen w-16 flex flex-col bg-white dark:bg-gray-900 shadow-lg'>
-      <SideBarIcon icon={<FireIcon className='w-20 h-20' />} text='Chatify' />
+      <SideBarIcon
+        icon={
+          <ChatAlt2Icon
+            onClick={() => router.push('/')}
+            className='w-10 h-10'
+          />
+        }
+        text='Chatify'
+      />
       <hr className='sidebar-hr' />
       <SideBarIcon
         icon={
