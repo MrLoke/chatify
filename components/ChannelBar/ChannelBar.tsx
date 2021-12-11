@@ -46,6 +46,12 @@ const ChannelBar = () => {
           <HashtagIcon className='text-gray-500 dark:text-gray-600 w-7 h-7 mr-2' />
           <h5 className='dropdown-selection-text'>Home</h5>
         </div>
+        <div
+          className='dropdown-selection mb-2'
+          onClick={() => router.push('/settings')}>
+          <HashtagIcon className='text-gray-500 dark:text-gray-600 w-7 h-7 mr-2' />
+          <h5 className='dropdown-selection-text'>Settings</h5>
+        </div>
         <div className='dropdown-header'>
           <div onClick={() => setExpanded(!expanded)}>
             <ChevronIcon expanded={expanded} />
