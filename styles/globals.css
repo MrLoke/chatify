@@ -18,7 +18,7 @@
   }
 
   .input-container {
-    @apply relative flex w-full flex-wrap items-stretch mb-3;
+    @apply relative flex w-full mb-3;
   }
 
   .input {
