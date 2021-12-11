@@ -45,7 +45,7 @@ const Settings: NextPage = () => {
           <SideBar />
           <ChannelBar />
         </div>
-        <div className='flex flex-col w-full bg-gray-700'>
+        <div className='flex flex-col w-full bg-gray-300 dark:bg-gray-700'>
           <TopNavigation />
           <UserSettings />
         </div>
