@@ -5,7 +5,8 @@ import SignInForm from 'components/SignInForm/SignInForm'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import SideBar from 'components/SideBar/SideBar'
 import WelcomeChannel from 'components/WelcomeChannel/WelcomeChannel'
-import { collection, getDocs } from '@firebase/firestore'
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner'
+import { collection, onSnapshot, query } from '@firebase/firestore'
 import { auth, db } from 'firebase-config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
@@ -17,7 +18,7 @@ const Home: NextPage = ({
   if (loading) {
     return (
       <div className='flex h-screen items-center justify-center'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-blue-200'></div>
+        <LoadingSpinner />
       </div>
     )
   }
@@ -60,12 +61,12 @@ const Home: NextPage = ({
 export const getServerSideProps: GetServerSideProps = async () => {
   const users: { id: string }[] = []
 
-  const querySnapshot = await getDocs(collection(db, 'users'))
-
-  querySnapshot.forEach((doc) => {
-    users.push({
-      ...doc.data(),
-      id: doc.id,
+  onSnapshot(query(collection(db, 'users')), (snapshot) => {
+    snapshot.docs.map((doc) => {
+      users.push({
+        ...doc.data(),
+        id: doc.id,
+      })
     })
   })
 
