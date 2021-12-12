@@ -11,6 +11,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { auth, db, storage } from 'firebase-config'
 import {
   SaveIcon,
+  UserIcon,
   ExclamationIcon,
   TrashIcon,
   UploadIcon,
@@ -19,14 +20,30 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from '@heroicons/react/outline'
+import { useForm } from 'react-hook-form'
 
 const UserSettings = () => {
-  const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
-  const [newUserName, setNewUserName] = useState('')
-  const [newEmail, setNewEmail] = useState('')
-  const [newPassword, setNewPassword] = useState('')
   const [newAvatar, setNewAvatar] = useState<any>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset: reset,
+  } = useForm()
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    formState: { errors: errors2 },
+    reset: reset2,
+  } = useForm()
+  const {
+    register: register3,
+    handleSubmit: handleSubmit3,
+    formState: { errors: errors3 },
+    reset: reset3,
+  } = useForm()
 
   const handleShowPassword = () => setShowPassword(!showPassword)
 
@@ -40,20 +57,20 @@ const UserSettings = () => {
   const authUser = auth.currentUser as User
   const docRef = doc(db, 'users', userId)
 
-  const handleUpdateUserName = async () => {
-    await updateDoc(docRef, {
-      displayName: newUserName,
-    })
+  const handleUpdateUserName = async ({
+    displayName,
+  }: {
+    displayName: string
+  }) => {
+    updateProfile(authUser, { displayName })
+      .then(() => alert('User name has been updated successfully'))
+      .catch((error) => setIsError(error.message))
 
-    updateProfile(authUser, {
-      displayName: newUserName,
-    })
-      .then(() => {
-        console.log('Update successful')
-      })
-      .catch((error) => {
-        setIsError(error.message)
-      })
+    await updateDoc(docRef, { displayName }).catch((error) =>
+      setIsError(error.message)
+    )
+
+    reset()
   }
 
   const handleUpdateAvatar = async () => {
@@ -62,130 +79,156 @@ const UserSettings = () => {
     await uploadBytes(imageRef, newAvatar).then(async (snapshot) => {
       const downloadURL = await getDownloadURL(imageRef)
 
-      await updateDoc(docRef, {
-        avatar: downloadURL,
-      })
-
       updateProfile(authUser, {
         photoURL: downloadURL,
       })
-        .then(() => {
-          console.log('Update successful')
-        })
-        .catch((error) => {
-          setIsError(error.message)
-        })
+        .then(() => alert('User avatar has been updated successfully'))
+        .catch((error) => setIsError(error.message))
+
+      await updateDoc(docRef, {
+        avatar: downloadURL,
+      }).catch((error) => setIsError(error.message))
     })
   }
 
-  const handleUpdateEmail = async () => {
-    await updateDoc(docRef, {
-      email: newEmail,
-    })
+  const handleUpdateEmail = async ({ email }: { email: string }) => {
+    updateEmail(authUser, email)
+      .then(() => alert('User e-mail has been updated successfully'))
+      .catch((error) => setIsError(error.message))
 
-    updateEmail(authUser, newEmail)
-      .then(() => {
-        console.log('Update successful')
-      })
-      .catch((error) => {
-        setIsError(error.message)
-      })
+    await updateDoc(docRef, { email }).catch((error) =>
+      setIsError(error.message)
+    )
+
+    reset2()
   }
 
-  const handleUpdatePassword = async () => {
-    updatePassword(authUser, newPassword)
-      .then(() => {
-        console.log('Update successful')
-      })
-      .catch((error) => {
-        setIsError(error.message)
-      })
+  const handleUpdatePassword = async ({ password }: { password: string }) => {
+    updatePassword(authUser, password)
+      .then(() => alert('User password has been updated successfully'))
+      .catch((error) => setIsError(error.message))
+
+    reset3()
   }
 
   const handleDeleteUser = async () => {
-    deleteUser(authUser)
-      .then(() => {
-        console.log('Update successful')
-      })
-      .catch((error) => {
-        setIsError(error.message)
-      })
+    deleteUser(authUser).catch((error) => setIsError(error.message))
   }
 
   return (
-    <div className='flex flex-col w-9/12 xl:w-7/12 2xl:w-5/12 mx-auto h-full mt-4'>
+    <div className='flex flex-col w-9/12 xl:w-7/12 2xl:w-5/12 mx-auto h-full mt-6'>
       <h2 className='text-center text-xl py-4 font-medium'>
         Edit user information
       </h2>
-      <div className='flex mb-4'>
-        <div className='input-container mb-0'>
-          <span className='input-icon'>
-            <MailIcon className='w-5 h-5 text-gray-900' />
-          </span>
-          <input
-            type='text'
-            placeholder='New username'
-            value={newUserName}
-            onChange={(e) => setNewUserName(e.target.value)}
-            className='input'
-          />
+      <form onSubmit={handleSubmit(handleUpdateUserName)}>
+        <div className='flex mb-4'>
+          <div className='input-container mb-0'>
+            <span className='input-icon'>
+              <UserIcon className='w-5 h-5 text-gray-900' />
+            </span>
+            <input
+              {...register('displayName', {
+                minLength: {
+                  value: 3,
+                  message: 'Username is too short 3 characters minimum',
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'Username is too long',
+                },
+              })}
+              name='displayName'
+              type='text'
+              placeholder='New username'
+              className='input'
+            />
+          </div>
+          <button
+            type='submit'
+            className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
+            Save&nbsp;
+            <SaveIcon className='w-5 h-5 text-white' />
+          </button>
         </div>
-        <button
-          onClick={handleUpdateUserName}
-          className='flex cursor-pointer items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
-          Save&nbsp;
-          <SaveIcon className='w-5 h-5' />
-        </button>
-      </div>
+        {errors.displayName && (
+          <span className='text-center w-full text-sm text-red-500'>
+            {errors.displayName.message}
+          </span>
+        )}
+      </form>
 
-      <div className='flex mb-4'>
-        <div className='input-container mb-0'>
-          <span className='input-icon'>
-            <MailIcon className='w-5 h-5 text-gray-900' />
-          </span>
-          <input
-            type='email'
-            placeholder='New e-mail'
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            className='input'
-          />
+      <form onSubmit={handleSubmit2(handleUpdateEmail)}>
+        <div className='flex mb-4'>
+          <div className='input-container mb-0'>
+            <span className='input-icon'>
+              <MailIcon className='w-5 h-5 text-gray-900' />
+            </span>
+            <input
+              {...register2('email', {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid e-mail address',
+                },
+              })}
+              name='email'
+              type='email'
+              placeholder='New e-mail'
+              className='input'
+            />
+          </div>
+          <button
+            type='submit'
+            className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
+            Save&nbsp;
+            <SaveIcon className='w-5 h-5 text-white' />
+          </button>
         </div>
-        <button
-          onClick={handleUpdateEmail}
-          className='flex cursor-pointer items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
-          Save&nbsp;
-          <SaveIcon className='w-5 h-5' />
-        </button>
-      </div>
+        {errors2.email && (
+          <span className='text-center w-full text-sm text-red-500'>
+            {errors2.email.message}
+          </span>
+        )}
+      </form>
 
-      <div className='flex mb-4'>
-        <div className='input-container mb-0'>
-          <span className='input-icon'>
-            <LockClosedIcon className='w-5 h-5 text-gray-900' />
-          </span>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder='New password'
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className='input'
-          />
-          <span className='show-password-icon' onClick={handleShowPassword}>
-            {showPassword ? (
-              <EyeOffIcon className='w-5 h-5 text-gray-900' />
-            ) : (
-              <EyeIcon className='w-5 h-5 text-gray-900' />
-            )}
-          </span>
+      <form onSubmit={handleSubmit3(handleUpdatePassword)}>
+        <div className='flex mb-4'>
+          <div className='input-container mb-0'>
+            <span className='input-icon'>
+              <LockClosedIcon className='w-5 h-5 text-gray-900' />
+            </span>
+            <input
+              {...register3('password', {
+                minLength: {
+                  value: 6,
+                  message: 'Password is too short 6 characters minimum',
+                },
+              })}
+              name='password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='New password'
+              className='input'
+            />
+            <span className='show-password-icon' onClick={handleShowPassword}>
+              {showPassword ? (
+                <EyeOffIcon className='w-5 h-5 text-gray-900' />
+              ) : (
+                <EyeIcon className='w-5 h-5 text-gray-900' />
+              )}
+            </span>
+          </div>
+          <button
+            type='submit'
+            className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
+            Save&nbsp;
+            <SaveIcon className='w-5 h-5 text-white' />
+          </button>
         </div>
-        <button
-          onClick={handleUpdatePassword}
-          className='flex cursor-pointer items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
-          Save&nbsp;
-          <SaveIcon className='w-5 h-5' />
-        </button>
-      </div>
+        {errors3.password && (
+          <span className='text-center w-full text-sm text-red-500'>
+            {errors3.password.message}
+          </span>
+        )}
+      </form>
 
       <div className='flex my-2'>
         <label
@@ -204,9 +247,9 @@ const UserSettings = () => {
 
         <button
           onClick={handleUpdateAvatar}
-          className='flex cursor-pointer items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
+          className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
           Save&nbsp;
-          <SaveIcon className='w-5 h-5' />
+          <SaveIcon className='w-5 h-5 text-white' />
         </button>
       </div>
 
