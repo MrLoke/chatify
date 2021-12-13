@@ -5,10 +5,12 @@ import { useRouter } from 'next/router'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import ChatFeed from 'components/ChatFeed/ChatFeed'
 import SideBar from 'components/SideBar/SideBar'
+import UsersList from 'components/UsersList/UsersList'
+import SignInForm from 'components/SignInForm/SignInForm'
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner'
 import { collection, onSnapshot, query } from '@firebase/firestore'
 import { auth, db } from 'firebase-config'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import SignInForm from 'components/SignInForm/SignInForm'
 
 const Channel: NextPage = ({
   messages,
@@ -19,7 +21,7 @@ const Channel: NextPage = ({
   if (loading) {
     return (
       <div className='flex h-screen items-center justify-center'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-blue-200'></div>
+        <LoadingSpinner />
       </div>
     )
   }
@@ -54,6 +56,9 @@ const Channel: NextPage = ({
           <ChannelBar />
         </div>
         <ChatFeed messages={messages} />
+        <div className='hidden lg:flex'>
+          <UsersList />
+        </div>
       </div>
     </>
   )

@@ -4,6 +4,7 @@ import Head from 'next/head'
 import SignInForm from 'components/SignInForm/SignInForm'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import SideBar from 'components/SideBar/SideBar'
+import UsersList from 'components/UsersList/UsersList'
 import WelcomeChannel from 'components/WelcomeChannel/WelcomeChannel'
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner'
 import { collection, onSnapshot, query } from '@firebase/firestore'
@@ -53,6 +54,9 @@ const Home: NextPage = ({
           <ChannelBar />
         </div>
         <WelcomeChannel users={users} />
+        <div className='hidden lg:flex'>
+          <UsersList />
+        </div>
       </div>
     </>
   )
