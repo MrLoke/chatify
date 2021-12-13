@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Channel from 'components/Channel/Channel'
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner'
 import {
   ChevronDownIcon,
   ChevronRightIcon,
   PlusIcon,
 } from '@heroicons/react/solid'
-import Channel from 'components/Channel/Channel'
 import {
   collection,
   DocumentData,
@@ -70,14 +71,19 @@ const ChannelBar = () => {
           </div>
         </div>
         <div className='channel-container'>
-          {expanded &&
+          {expanded && channelsList.length > 0 ? (
             channelsList.map((channel) => (
               <Channel
                 key={channel.id}
                 channelName={channel.data().channelName}
                 id={channel.id}
               />
-            ))}
+            ))
+          ) : (
+            <div className='w-full mt-4 flex justify-center'>
+              <LoadingSpinner />
+            </div>
+          )}
         </div>
       </div>
     </div>
