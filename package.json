@@ -6,11 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watchAll",
-    "cy:open-only": "cypress open",
-    "cy:run-only": "cypress run",
-    "cy:open": "start-server-and-test dev 3000 cy:open-only",
-    "cy:run": "start-server-and-test dev 3000 cy:run-only"
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
@@ -19,6 +15,8 @@
     "emoji-mart": "^3.0.1",
     "firebase": "^9.0.0",
     "next": "^12.0.1",
+    "next-pwa": "^5.4.4",
+    "next-seo": "^4.28.1",
     "next-themes": "0.0.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -35,12 +33,10 @@
     "@types/react": "17.0.37",
     "autoprefixer": "^10.4.0",
     "babel-jest": "^27.3.1",
-    "cypress": "^9.1.1",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.4",
     "jest": "^27.3.1",
     "postcss": "^8.4.3",
-    "start-server-and-test": "^1.14.0",
     "tailwindcss": "^2.2.19",
     "typescript": "4.5.2"
   }
