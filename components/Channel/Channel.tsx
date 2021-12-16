@@ -8,6 +8,7 @@ const Channel = ({ id, channelName }: ChannelPropsTypes) => {
   return (
     <div
       key={id}
+      data-testid='push-to-channel'
       className='dropdown-selection'
       onClick={() =>
         router.push({
