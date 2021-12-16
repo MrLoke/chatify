@@ -49,7 +49,7 @@ const UsersList = () => {
               key={user.id}
               className='flex flex-col my-2 py-1 w-full items-center rounded-md cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700'>
               <div className='flex w-full'>
-                <div className='relative mr-2'>
+                <div className='mr-2'>
                   <Image
                     src={user.data().avatar}
                     alt={`${user.data().displayName} avatar`}
@@ -60,8 +60,8 @@ const UsersList = () => {
                     className='rounded-full'
                   />
                 </div>
-                <div className='flex flex-col w-full'>
-                  <p className='truncate w-full'>{user.data().displayName}</p>
+                <div className='flex flex-col'>
+                  <p className='truncate'>{user.data().displayName}</p>
                   <p className='truncate text-xs text-gray-500'>
                     Last sign in:{' '}
                     {formatDistance(new Date(user.data().status), new Date(), {
