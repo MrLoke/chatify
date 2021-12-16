@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 import ChannelBar from 'components/ChannelBar/ChannelBar'
 import SideBar from 'components/SideBar/SideBar'
 import UserSettings from 'components/UserSettings/UserSettings'
@@ -12,6 +13,7 @@ import { auth } from 'firebase-config'
 
 const Settings: NextPage = () => {
   const [user, loading, error] = useAuthState(auth)
+  const { asPath } = useRouter()
 
   if (loading) {
     return (
@@ -39,9 +41,17 @@ const Settings: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Chatify | Settings</title>
-      </Head>
+      <NextSeo
+        title='Chatify | Settings'
+        description='Group chat communicator'
+        openGraph={{
+          type: 'website',
+          title: 'Chatify | Settings',
+          url: `https://${process.env.NEXT_PUBLIC_URL!}${asPath}`,
+          description: 'Group chat communicator',
+          site_name: 'Chatify',
+        }}
+      />
       <div className='flex h-screen'>
         <div className='hidden md:flex'>
           <SideBar />

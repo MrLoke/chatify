@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import type { NextPage } from 'next'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import SignUpForm from 'components/SignUpForm/SignUpForm'
 import { auth } from 'firebase-config'
@@ -21,9 +21,17 @@ const Signup: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Chatify | Sign Up</title>
-      </Head>
+      <NextSeo
+        title='Chatify | Sign Up'
+        description='Group chat communicator'
+        openGraph={{
+          type: 'website',
+          title: 'Chatify | Sign Up',
+          url: `https://${process.env.NEXT_PUBLIC_URL!}${router.asPath}`,
+          description: 'Group chat communicator',
+          site_name: 'Chatify',
+        }}
+      />
       <div className='flex min-h-screen items-center justify-center'>
         <SignUpForm />
       </div>
