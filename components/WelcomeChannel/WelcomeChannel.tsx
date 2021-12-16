@@ -24,7 +24,9 @@ const WelcomeChannel = ({ users }: { users: string }) => {
   return (
     <div className='content-container'>
       <TopNavigation />
-      <div className='content-list'>{showUsers()}</div>
+      <div className='flex flex-col h-full w-full mx-auto px-0 pb-4 overflow-y-scroll'>
+        {showUsers()}
+      </div>
     </div>
   )
 }
