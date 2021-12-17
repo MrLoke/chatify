@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<p align="center">
   <img src='public/images/icon-256x256.png' alt='chatify-icon' />
-</div>
+</p>
 
 ## Educational chat communicator project, the whole code is created by me. 🎉
 
