@@ -1,4 +1,6 @@
-![](public/images/icon-512x512.png)
+<div style="text-align:center">
+  <img src='public/images/icon-256x256.png' alt='chatify-icon' />
+</div>
 
 ## Educational chat communicator project, the whole code is created by me. 🎉
 
