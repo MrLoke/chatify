@@ -21,7 +21,7 @@ describe('SignUpForm validation', () => {
   it('Should display error message if email is invalid', async () => {
     render(<SignUpForm />)
 
-    userEvent.type(screen.getByLabelText('email-input'), 'email-input')
+    userEvent.type(screen.getByLabelText('email-input'), 'demo')
     await act(async () => {
       userEvent.click(screen.getByLabelText('sign-up-button'))
     })
