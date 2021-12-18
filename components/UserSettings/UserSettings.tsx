@@ -55,7 +55,6 @@ const UserSettings = () => {
 
   const userId = auth.currentUser?.uid || ''
   const authUser = auth.currentUser as User
-  const docRef = doc(db, 'users', userId)
 
   const handleUpdateUserName = async ({
     displayName,
@@ -66,7 +65,7 @@ const UserSettings = () => {
       .then(() => alert('User name has been updated successfully'))
       .catch((error) => setIsError(error.message))
 
-    await updateDoc(docRef, { displayName }).catch((error) =>
+    await updateDoc(doc(db, 'users', userId), { displayName }).catch((error) =>
       setIsError(error.message)
     )
 
@@ -74,6 +73,8 @@ const UserSettings = () => {
   }
 
   const handleUpdateAvatar = async () => {
+    if (newAvatar === null) return
+
     const imageRef = ref(storage, `users/${userId}/${newAvatar.name}`)
 
     await uploadBytes(imageRef, newAvatar).then(async (snapshot) => {
@@ -85,7 +86,7 @@ const UserSettings = () => {
         .then(() => alert('User avatar has been updated successfully'))
         .catch((error) => setIsError(error.message))
 
-      await updateDoc(docRef, {
+      await updateDoc(doc(db, 'users', userId), {
         avatar: downloadURL,
       }).catch((error) => setIsError(error.message))
     })
@@ -96,7 +97,7 @@ const UserSettings = () => {
       .then(() => alert('User e-mail has been updated successfully'))
       .catch((error) => setIsError(error.message))
 
-    await updateDoc(docRef, { email }).catch((error) =>
+    await updateDoc(doc(db, 'users', userId), { email }).catch((error) =>
       setIsError(error.message)
     )
 
@@ -141,9 +142,11 @@ const UserSettings = () => {
               type='text'
               placeholder='New username'
               className='input'
+              aria-label='user-name-input'
             />
           </div>
           <button
+            aria-label='save-updated-user-name'
             type='submit'
             className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
             Save&nbsp;
@@ -174,9 +177,11 @@ const UserSettings = () => {
               type='email'
               placeholder='New e-mail'
               className='input'
+              aria-label='email-input'
             />
           </div>
           <button
+            aria-label='save-updated-email'
             type='submit'
             className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
             Save&nbsp;
@@ -207,6 +212,7 @@ const UserSettings = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder='New password'
               className='input'
+              aria-label='password-input'
             />
             <span className='show-password-icon' onClick={handleShowPassword}>
               {showPassword ? (
@@ -217,6 +223,7 @@ const UserSettings = () => {
             </span>
           </div>
           <button
+            aria-label='save-updated-password'
             type='submit'
             className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
             Save&nbsp;
@@ -243,9 +250,11 @@ const UserSettings = () => {
           type='file'
           accept='.jpg, .jpeg, .png .webp .avif'
           id='avatar'
+          aria-label='avatar-input'
         />
 
         <button
+          aria-label='save-updated-avatar'
           onClick={handleUpdateAvatar}
           className='flex cursor-pointer text-white items-center bg-blue-500 hover:bg-blue-800 transition-all ml-3 p-2 rounded'>
           Save&nbsp;
