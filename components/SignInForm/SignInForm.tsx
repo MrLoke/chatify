@@ -68,7 +68,7 @@ const SignInForm = () => {
           />
         </div>
         {errors.email && (
-          <span className='mt-2 text-center w-full text-sm text-red-500'>
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
             {errors.email.message}
           </span>
         )}
@@ -96,7 +96,7 @@ const SignInForm = () => {
           </span>
         </div>
         {errors.password && (
-          <span className='mt-2 text-center w-full text-sm text-red-500'>
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
             {errors.password.message}
           </span>
         )}

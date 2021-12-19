@@ -128,12 +128,12 @@ const SignUpForm = () => {
             type='text'
             className='input'
           />
-          {errors.displayName && (
-            <span className='mt-2 text-center w-full text-sm text-red-500'>
-              {errors.displayName.message}
-            </span>
-          )}
         </div>
+        {errors.displayName && (
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
+            {errors.displayName.message}
+          </span>
+        )}
 
         <div className='input-container'>
           <span className='input-icon'>
@@ -153,12 +153,12 @@ const SignUpForm = () => {
             type='text'
             className='input'
           />
-          {errors.email && (
-            <span className='mt-2 text-center w-full text-sm text-red-500'>
-              {errors.email.message}
-            </span>
-          )}
         </div>
+        {errors.email && (
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
+            {errors.email.message}
+          </span>
+        )}
 
         <div className='input-container'>
           <span className='input-icon'>
@@ -185,12 +185,12 @@ const SignUpForm = () => {
               <EyeIcon className='w-5 h-5 text-gray-900' />
             )}
           </span>
-          {errors.password && (
-            <span className='mt-2 text-center w-full text-sm text-red-500'>
-              {errors.password.message}
-            </span>
-          )}
         </div>
+        {errors.password && (
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
+            {errors.password.message}
+          </span>
+        )}
 
         <div className='input-container'>
           <span className='input-icon'>
@@ -213,12 +213,12 @@ const SignUpForm = () => {
               <EyeIcon className='w-5 h-5 text-gray-900' />
             )}
           </span>
-          {errors.confirmPassword && (
-            <span className='mt-2 text-center w-full text-sm text-red-500'>
-              {errors.confirmPassword.message}
-            </span>
-          )}
         </div>
+        {errors.confirmPassword && (
+          <span className='mb-2 text-center w-full text-sm text-red-500'>
+            {errors.confirmPassword.message}
+          </span>
+        )}
 
         <label
           htmlFor='avatar'
