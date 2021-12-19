@@ -121,7 +121,7 @@ const SignInForm = () => {
         <button
           type='submit'
           aria-label='sign-in-button'
-          className='submit-btn flex justify-center'
+          className='submit-btn flex justify-center text-white'
           disabled={loading}>
           {loading ? (
             <svg

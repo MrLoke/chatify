@@ -247,7 +247,7 @@ const SignUpForm = () => {
         <button
           type='submit'
           aria-label='sign-up-button'
-          className='submit-btn flex justify-center'
+          className='submit-btn flex justify-center text-white'
           disabled={loading}>
           {loading ? (
             <svg
