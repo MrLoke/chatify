@@ -1,7 +1,8 @@
 module.exports = {
-  enabled: true,
-  mode: 'jit',
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+  ],
   darkMode: 'class',
   theme: {
     extend: {
@@ -27,21 +28,11 @@ module.exports = {
           500: '#5865f2',
           800: '#4752c4',
         },
-        green: {
-          500: '#10B981',
-        },
         red: {
           300: '#FCA5A5',
           500: '#EF4444',
         },
       },
-    },
-  },
-  variants: {
-    extend: {
-      borderStyle: ['hover', 'focus'],
-      padding: ['first', 'last'],
-      margin: ['first', 'last'],
     },
   },
   plugins: [],
